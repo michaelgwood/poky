@@ -1,0 +1,20 @@
+language: python
+python:
+  - "3.5"
+
+cache: pip
+
+install:
+  - pip install -r ./bitbake/toaster-requirements.txt
+  - pip install -r ./bitbake/lib/toaster/tests/toaster-tests-requirements.txt
+  - pip install flake8
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - sleep 3 # give xvfb some time to start
+
+before_script: export TOASTER_TESTS_BROWSER=marionette
+
+script:
+  - ./bitbake/lib/toaster/manage.py test toastergui
+  - ./bitbake/lib/toaster/manage.py test tests.browser
+  - flake8 ./bitbake/lib/toaster/ --select F
